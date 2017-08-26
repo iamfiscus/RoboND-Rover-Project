@@ -99,15 +99,14 @@ def perception_step(Rover):
     # Set bottom offset to account for the bottom of the image is not true offset
     image = Rover.img
     bottom_offset = 6
-    source = np.float32([[14, 140], [301 ,140],[200, 96], [118, 96]])
-    print('source',source)
+    source = np.float32([[14, 140], [301 ,140], [200, 96], [118, 96]])
+
     destination = np.float32([[image.shape[1]/2 - dst_size, image.shape[0] - bottom_offset],
                   [image.shape[1]/2 + dst_size, image.shape[0] - bottom_offset],
                   [image.shape[1]/2 + dst_size, image.shape[0] - 2*dst_size - bottom_offset],
                   [image.shape[1]/2 - dst_size, image.shape[0] - 2*dst_size - bottom_offset],
                   ])
 
-    print(destination)
     # 2) Apply perspective transform
     warped, mask = perspect_transform(image, source, destination)
 
@@ -115,8 +114,8 @@ def perception_step(Rover):
     threshed = color_thresh(warped)
     obstacle_map = np.absolute(np.float32(threshed) - 1) * mask
     # 4) Update Rover.vision_image (this will be displayed on left side of screen)
-    Rover.vision_image[:,:,0] = threshed * 255
-    Rover.vision_image[:,:,2] = obstacle_map * 255
+    Rover.vision_image[:,:,2] = threshed * 255
+    Rover.vision_image[:,:,0] = obstacle_map * 255
 
     # 5) Convert map image pixel values to rover-centric coords
     xpix, ypix = rover_coords(threshed)
